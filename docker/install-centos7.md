@@ -31,7 +31,7 @@
 ## 三，卸载docker ##
 1. 列出安装的docker  
     `yum list installed | grep docker`  
-2. 删除安装包
+2. 删除安装包  
     `sudo yum -y remove docker-engine.x86_64`  
 3. 删除数据文件  
     `rm -rf /var/lib/docker`
