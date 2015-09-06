@@ -1,0 +1,62 @@
+#cloud-config
+
+# host name
+hostname: coreos
+
+# /etc/hosts
+manage_etc_hosts: localhost
+
+# Add users to the system. Users are added after groups are added.
+users: 
+ - name: root
+   gecos: root
+   homedir: /root
+   primary-group: root
+   groups: 
+     - root
+   shell: /bin/bash
+ - name: core
+   gecos: core
+   homedir: /home/core
+   primary-group: core
+   groups: 
+     - core
+     - admin
+     - sudo
+   ssh_authorized_keys: 
+     - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr0GXoActX838+l473XTcpLHcnY8XR3AAGpMeeOrvzZK1GKtiXBdUazyhXFb0qscXiXNn6SrLyd6R43egIN55gxKb9Jku+9a0X/HcT0U+GWNc+J6YCPLNVuF87GRfyFPjuAxaL8VsPr9V4T7BW+aoLEEURRvHhU8v4R1t04KJT53J324Bjp6HiGYwcFaVdARySjNcjbRLkGRfGaOM3XNbBP5KhW2hFsIpw5dpthzeJ3yibko8ZTKQZer4sP4VzcZAjNXRghrIm33FRJ3aJ6YA1ap5Y0WZBV9O11Ox9C+oPIUbwMOTdyVZU4Ue1HquPM8gUTXQygKqzXtniSqvSi2i7 admin@example.com
+   shell: /bin/bash
+
+# write files
+write_files:
+ - path: /etc/resolv.conf
+   permissions: 0644
+   owner: root
+   content: |
+     nameserver 8.8.8.8
+ - path: /etc/ssh/sshd_config
+   content: |
+     Port 22
+     Protocol 2
+     UsePrivilegeSeparation yes
+     KeyRegenerationInterval 3600
+     ServerKeyBits 1024
+     SyslogFacility AUTH
+     LogLevel INFO
+     LoginGraceTime 120
+     PermitRootLogin yes
+     StrictModes yes
+     RSAAuthentication yes
+     PubkeyAuthentication yes
+     IgnoreRhosts yes
+     RhostsRSAAuthentication no
+     HostbasedAuthentication no
+     PermitEmptyPasswords yes
+     ChallengeResponseAuthentication no
+     X11Forwarding yes
+     X11DisplayOffset 10
+     PrintMotd no
+     PrintLastLog yes
+     TCPKeepAlive yes
+     AcceptEnv LANG LC_*
+     UsePAM yes
