@@ -2,21 +2,27 @@
 ## 一，准备 ##
 1. centos7 x86-64
 2. 查看版本：  
-    >`uname -r`  
-    >`3.10.0-229.11.1.el7.x86_64`  
+
+    ```bash
+    uname -r    
+    3.10.0-229.11.1.el7.x86_64
+    ```
 
 ## 二，安装docker ##
 1. 更新系统：  
     `yum update -y`
-2. 添加docker版本仓库:        
-    ```cat >/etc/yum.repos.d/docker.repo <<-EOF  
+2. 添加docker版本仓库:   
+
+    ```bash
+    cat >/etc/yum.repos.d/docker.repo <<-EOF  
         [dockerrepo]  
         name=Docker Repository  
         baseurl=https://yum.dockerproject.org/repo/main/centos/7  
         enabled=1  
         gpgcheck=1  
         gpgkey=https://yum.dockerproject.org/gpg  
-        EOF```
+        EOF
+    ```
 3. 安装docker：  
     `sudo yum install docker-engine`  
 4. 启动Docker daemon：  

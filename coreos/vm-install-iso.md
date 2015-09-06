@@ -7,12 +7,12 @@
 
 ## 二，操作步骤 ##
 1. 新建虚拟机，命名为：coreos。推荐配置如下：
-	- 内存：2GB
-	- 硬盘：100GB
-	- 处理器核数：4
-	- 网络连接模式：NAT
-	- 如图：  
-    ![](vm.jpg)
+ - 内存：2GB
+ - 硬盘：100GB
+ - 处理器核数：4
+ - 网络连接模式：NAT
+ - 如图：  
+ ![](vm.jpg)
 2. 从ISO文件启动虚拟机，完成初始化工作
 3. 使用PuTTYgen制作ssh-key，并保存公钥和私钥
 4. 新建文本文件命名为：cloud-config.yaml，文件内容如下：
@@ -24,14 +24,14 @@
 	> manage\_etc\_hosts: localhost
 	> 
 	> \# Add users to the system. Users are added after groups are added.  
-	> users:   
-	> - name: root  
+	> users:     
+	>　- name: root  
 	>　　　　gecos: root  
 	>　　　　homedir: /root  
 	>　　　　primary-group: root  
-	>　　　　groups:   
-	>      - root  
-	>    shell: /bin/bash  
+	>　　　　groups:     
+	>　　　　- root　　    
+	>　　　　　shell: /bin/bash  
 	>　- name: core  
 	>　　　　gecos: core  
 	>　　　　homedir: /home/core  
@@ -40,7 +40,7 @@
 	>　　　　　- core  
 	>　　　　　- admin  
 	>　　　　　- sudo  
-	>　　　　ssh_authorized_keys:   
+	>　　　　ssh_authorized_keys:　　   
 	>　　　　　- ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDr0GXoActX83**......**  
 	>　　　　shell: /bin/bash
 	> 
@@ -92,6 +92,7 @@
 ## 三，问题 ##
 1. 网络下载速度慢
     - 在安装之前从[http://stable.release.core-os.net/amd64-usr/current/](http://stable.release.core-os.net/amd64-usr/current/ "coreos所有安装包")下载如下文件：  
+
         > coreos_production_image.bin.bz2  
         > coreos_production_image.bin.bz2.DIGESTS  
         > coreos_production_image.bin.bz2.DIGESTS.asc  
@@ -100,10 +101,10 @@
         > coreos_production_image_contents.txt  
         > coreos_production_image_contents.txt.sig  
         > coreos_production_image_packages.txt  
-        > coreos_production_image_packages.txt.sig    
+        > coreos_production_image_packages.txt.sig
     - 将下载的上述文件上传到代理服务器(172.1.110.200)，Apache根目录：  
        `/var/www/html/current`  
-    - 启动Apache服务：
+    - 启动Apache服务：  
        `service httpd start`
     - 回到虚拟机coreos，执行如下安装命令：  
        `coreos-install -d /dev/sda -C stable -c cloud-config.yaml -V stable -b http://172.1.110.200`
