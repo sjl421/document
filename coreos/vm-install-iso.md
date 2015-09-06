@@ -1,4 +1,4 @@
-# 在VMware Workstations虚拟机中从ISO文件启动安装基本coreos #
+# 在VMware Workstation虚拟机中从ISO文件启动安装基本coreos #
 ## 一，准备 ##
 1. VMware Workstations 11
 2. ISO文件，[http://stable.release.core-os.net/amd64-usr/current/coreos_production_iso_image.iso](http://stable.release.core-os.net/amd64-usr/current/coreos_production_iso_image.iso "coreos ISO")
