@@ -1,0 +1,32 @@
+version: '2'
+services:
+  db:
+    image: docker.io/mysql:latest
+    restart: always
+    volumes:
+      - ./dbdir:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: operation
+      MYSQL_USER: operation
+      MYSQL_PASSWORD: operation
+  http:
+    image: docker.io/nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - .:/usr/share/nginx/html
+    ports:
+      - "9090:9090"
+    depends_on:
+      - app
+    links:
+      - app
+  app:
+    build: .
+    volumes:
+      - .:/usr/share/nginx/html
+    command: "uwsgi --ini /usr/share/nginx/html/uwsgi.ini"
+    depends_on:
+      - db
+    links:
+      - db
