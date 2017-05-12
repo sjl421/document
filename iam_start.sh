@@ -3,6 +3,7 @@
 #set -x
 
 # 变量
+script=iam
 lock_name=labcloud_iam
 pid_name=labcloud_iam.pid
 log_name=labcloud_iam.log
@@ -29,14 +30,14 @@ logfile=${log_path}/${log_name}
 # 启动
 start() { 
 	if [ -f ${lockfile} ]; then
-		echo "iam is running"
+		echo "${script} is running"
 		exit 1
 	fi
 	if [ ! -f ${jar_file} ]; then
 		echo "jar file is not exist,maybe 'mvn package' failed.	[Failed]"
 		exit 2
 	else
-		echo -n "starting iam service..."
+		echo -n "starting ${script} service..."
 		${command} ${jar_file} >> ${logfile} 2>&1 &
 		sleep 5
 		# 判断pid是否存在
@@ -55,7 +56,7 @@ start() {
 
 # 停止
 stop() {
-	echo -n "stopping iam service..."
+	echo -n "stopping ${script} service..."
 	if [ -f ${pidfile} ]; then
 		pid=`cat ${pidfile}`
 	else
@@ -63,7 +64,7 @@ stop() {
 	fi
 	id=`ps -fe | grep ${jar_file} | grep -v grep | awk '{print $2}'`
 	if [ -z ${id} ]; then
-		echo "iam service not running"
+		echo "${script} service not running"
 	else
 		if [ ${pid} -ne ${id} ]; then
 			echo -e "		[Failed]"
@@ -84,7 +85,7 @@ restart() {
 		sleep 5
 		start
 	else
-		echo "iam service not running."
+		echo "${script} service not running."
 		start
 	fi
 }
@@ -98,13 +99,14 @@ status() {
 	fi
 	id=`ps -fe | grep ${jar_file} | grep -v grep | awk '{print $2}'`
 	if [ -z ${id} ]; then
-		echo "iam service not running.		[Failed]"
+		echo "${script} service not running.		[Failed]"
 		exit 5
 	fi
 	if [ ${pid} -eq ${id} ]; then
-		echo "iam service is running.		[OK]"
+		echo "${script} service is running.		[OK]"
 	else
-		echo "iam service not running.		[Failed]"
+		echo "${script} service not running.		[Failed]"
+		exit 6
 	fi
 }
 
