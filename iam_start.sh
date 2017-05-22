@@ -6,7 +6,7 @@
 script=iam
 lock_name=labcloud_iam
 pid_name=labcloud_iam.pid
-log_name=labcloud_iam.log
+log_name=labcloud_iam.`date "+%Y-%m-%d"`.log
 log_path=.
 
 lock_path=/var/lock
