@@ -2,11 +2,52 @@
     yum install -y python-openstackclient
 
 ## 配置OpenStack RC文件
-    export OS_USERNAME=username
-    export OS_PASSWORD=password
-    export OS_TENANT_NAME=projectName
-    export OS_AUTH_URL=https://identityHost:portNumber/v2.0
-    
+    #!/usr/bin/env bash
+
+    # To use an OpenStack cloud you need to authenticate against the Identity
+    # service named keystone, which returns a **Token** and **Service Catalog**.
+    # The catalog contains the endpoints for all services the user/tenant has
+    # access to - such as Compute, Image Service, Identity, Object Storage, Block
+    # Storage, and Networking (code-named nova, glance, keystone, swift,
+    # cinder, and neutron).
+    #
+    # *NOTE*: Using the 2.0 *Identity API* does not necessarily mean any other
+    # OpenStack API is version 2.0. For example, your cloud provider may implement
+    # Image API v1.1, Block Storage API v2, and Compute API v2.0. OS_AUTH_URL is
+    # only for the Identity API served through keystone.
+    export OS_AUTH_URL=http://192.168.91.132/identity
+
+    # With the addition of Keystone we have standardized on the term **tenant**
+    # as the entity that owns the resources.
+    export OS_TENANT_ID=69cabc3b43794fc98eb63010814e3b78
+    export OS_TENANT_NAME="admin"
+
+    # unsetting v3 items in case set
+    unset OS_PROJECT_ID
+    unset OS_PROJECT_NAME
+    unset OS_USER_DOMAIN_NAME
+    unset OS_INTERFACE
+
+    # In addition to the owning entity (tenant), OpenStack stores the entity
+    # performing the action as the **user**.
+    export OS_USERNAME="admin"
+
+    # With Keystone you pass the keystone password.
+    #echo "Please enter your OpenStack Password for project $OS_TENANT_NAME as user $OS_USERNAME: "
+    #read -sr OS_PASSWORD_INPUT
+    #export OS_PASSWORD=$OS_PASSWORD_INPUT
+    export OS_PASSWORD="openstack"
+
+    # If your configuration has multiple regions, we set that information here.
+    # OS_REGION_NAME is optional and only valid in certain environments.
+    export OS_REGION_NAME="RegionOne"
+    # Don't leave a blank variable, unset it if it was empty
+    if [ -z "$OS_REGION_NAME" ]; then unset OS_REGION_NAME; fi
+
+    export OS_ENDPOINT_TYPE=publicURL
+    export OS_IDENTITY_API_VERSION=2
+
+
 ## 测试
     1.openstack server list --insecure
     +--------------------------------------+------------------+--------+----------------------------------+------------+
@@ -23,7 +64,7 @@
     | fed7b9bd-17f5-4d12-8abd-edb94589de90 | win7_vm_test_002 | ACTIVE | net1=192.168.1.27                |            |
     | 314fc3db-f661-451c-a22f-940e7d9a792a | win7_vm_test_001 | ACTIVE | net1=192.168.1.26, 10.109.157.20 |            |
     +--------------------------------------+------------------+--------+----------------------------------+------------+
-    
+
     2.openstack router list --insecure
     +--------------------------------------+-----------------------------------------+--------+-------+-------------+-------+----------------------------------+
     | ID                                   | Name                                    | Status | State | Distributed | HA    | Project                          |
@@ -35,7 +76,7 @@
     | ee4c266e-2667-4004-89e3-51a60ee647db | DN-pekitlab_test1                       | ACTIVE | UP    | False       | False | 288e083b209748f9930cdd2bb01ea896 |
     | fb2fc8f2-ed1a-4a82-bc3c-1602998aedd0 | Router_fbca84ba4b3a447595204b644c047e3e | ACTIVE | UP    | False       | False | fbca84ba4b3a447595204b644c047e3e |
     +--------------------------------------+-----------------------------------------+--------+-------+-------------+-------+----------------------------------+
-    
+
     3.openstack network list --insecure
     +--------------------------------------+-------------------------+--------------------------------------+
     | ID                                   | Name                    | Subnets                              |
@@ -51,6 +92,3 @@
     | f5e98168-3b35-4ef3-94ab-6bc113087554 | external_om             | 9d6f485f-7741-4c96-ac41-6c00744c60db |
     | f76ee0da-6944-44d4-b999-bdd4e3800c10 | external_api            | 9ab7e8de-2cb3-42bc-be70-cc37621f9ef9 |
     +--------------------------------------+-------------------------+--------------------------------------+
-
-
-    
