@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# make fpm pid dir
+FPM_PID_DIR=/run/php-fpm
+if [ ! -d "$FPM_PID_DIR" ]; then
+  mkdir $FPM_PID_DIR
+fi
+
+# start php fpm
+php-fpm -D > /dev/null 2>&1
+
+# start nginx
+service nginx start > /dev/null 2>&1
+
+exit 0

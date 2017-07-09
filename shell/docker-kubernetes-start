@@ -1,0 +1,102 @@
+#!/bin/bash
+
+# Copyright 2014 The Kubernetes Authors All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+echo "====================================================================================="
+# list docker containers
+docker ps -a
+
+echo "====================================================================================="
+
+# Step One: Run etcd
+docker run --net=host -d gcr.io/google_containers/etcd:2.0.12 /usr/local/bin/etcd --addr=127.0.0.1:4001 --bind-addr=0.0.0.0:4001 --data-dir=/var/etcd/data
+
+echo "====================================================================================="
+
+# echo message
+echo "etcd starting ..."
+
+# sleep 10s
+sleep 10s
+
+echo "====================================================================================="
+
+# Step Two: Run the master
+docker run --net=host --privileged -d -v /sys:/sys:ro -v /var/run/docker.sock:/var/run/docker.sock gcr.io/google_containers/hyperkube:v1.0.1 /hyperkube kubelet --api-servers=http://localhost:8080 --v=2 --address=0.0.0.0 --enable-server --hostname-override=127.0.0.1 --config=/etc/kubernetes/manifests 
+
+echo "====================================================================================="
+
+# echo message
+echo "hyperkube starting ..."
+
+# sleep 10s
+sleep 10s
+
+echo "====================================================================================="
+
+# Step Three: Run the service proxy
+docker run -d --net=host --privileged gcr.io/google_containers/hyperkube:v1.0.1 /hyperkube proxy --master=http://127.0.0.1:8080 --v=2
+
+echo "====================================================================================="
+
+# echo message
+echo "kubectl starting ..."
+
+# sleep 30s
+sleep 30s
+
+echo "====================================================================================="
+
+# Test it out
+kubectl get nodes
+
+echo "====================================================================================="
+
+# sleep 5s
+sleep 5s
+
+# Run an application
+kubectl -s http://localhost:8080 run nginx --image=nginx --port=80
+
+echo "====================================================================================="
+
+# echo message
+echo "nginx starting ..."
+
+# sleep 30s
+sleep 30s
+
+echo "====================================================================================="
+
+# Expose it as a service
+kubectl expose rc nginx --port=80
+
+echo "====================================================================================="
+
+# sleep 5s
+sleep 5s
+
+kubectl get svc nginx
+
+echo "====================================================================================="
+
+# start kube-ui
+kubectl create -f /home/xiaobaoqiang/devel-tools/kubernetes/cluster/addons/kube-ui/kube-ui-rc.yaml
+kubectl create -f /home/xiaobaoqiang/devel-tools/kubernetes/cluster/addons/kube-ui/kube-ui-svc.yaml
+
+echo "====================================================================================="
+
+# exit
+# end of script
