@@ -36,3 +36,4 @@ exports.handler = (event, context, callback) => {
 	callback(null, 'Hello World!');
 };
 ```
+https://sellercentral.amazon.com/forums/thread.jspa?threadID=342557&tstart=0
