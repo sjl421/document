@@ -8,6 +8,7 @@ brew install node
 node --version
 npm --version
 ```
+
 3. use the follow commands at your shell prompt
 
 ```
@@ -17,6 +18,7 @@ npm install request bhttp
 touch index.js
 
 ```
+
 4. look the directory
 
 ```
@@ -24,11 +26,13 @@ ls -lF
 index.js
 node_modules/
 ```
+
 5. make a zip package
 
 ```
 zip ../codeLogin.zip -r *
 ```
+
 6. index.js structure like this：
 
 ```
@@ -36,4 +40,12 @@ exports.handler = (event, context, callback) => {
 	callback(null, 'Hello World!');
 };
 ```
-https://sellercentral.amazon.com/forums/thread.jspa?threadID=342557&tstart=0
+
+7. perhaps problem
+
+[unsupported grant type error](https://sellercentral.amazon.com/forums/thread.jspa?threadID=342557&tstart=0)
+
+8. Help link and docs
+
+[]() 
+
