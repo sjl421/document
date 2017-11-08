@@ -43,9 +43,13 @@ exports.handler = (event, context, callback) => {
 
 7. perhaps problem
 
-[unsupported grant type error](https://sellercentral.amazon.com/forums/thread.jspa?threadID=342557&tstart=0)
+[unsupported grant type error](https://sellercentral.amazon.com/forums/thread.jspa?threadID=342557&tstart=0)  
 
 8. Help link and docs
 
-[]() 
+[Amazon API Gateway + AWS Lambda + OAuth](https://www.authlete.com/documents/apigateway_lambda_oauth_step1)  
+[Authorization Code Grant](https://developer.amazon.com/docs/login-with-amazon/authorization-code-grant.html)  
+[login-with-amazon](https://github.com/stevegula/login-with-amazon)  
+[Login with Amazon](https://login.amazon.com/documentation)  
+[Login with Amazon Developer Guide for Websites](https://images-na.ssl-images-amazon.com/images/G/01/lwa/dev/docs/website-developer-guide._TTH_.pdf)  
 
