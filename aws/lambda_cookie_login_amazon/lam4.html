@@ -1,0 +1,112 @@
+<a href="#" id="LoginWithAmazon">
+  <img border="0" alt="Login with Amazon"
+    src="https://images-na.ssl-images-amazon.com/images/G/01/lwa/btnLWA_gold_156x32.png"
+    width="156" height="32" />
+</a>
+<div id="amazon-root"></div>
+<a id="Logout" href="javascript:void(0)" onclick="logout()">Logout</a>
+<h3></h3>
+<script src="jquery.min.js"></script>
+<script type="text/javascript">
+
+  window.onAmazonLoginReady = function() {
+    amazon.Login.setClientId('<amazon-client-id>');
+  };
+  (function(d) {
+    var a = d.createElement('script'); a.type = 'text/javascript';
+    a.async = true; a.id = 'amazon-login-sdk';
+    a.src = 'https://api-cdn.amazon.com/sdk/login1.js';
+    d.getElementById('amazon-root').appendChild(a);
+  })(document);
+
+</script>
+<script type="text/javascript">
+  function setCookie(c_name,value,expiredays){
+    var exdate=new Date()
+    exdate.setDate(exdate.getDate()+expiredays)
+    document.cookie=c_name+ "=" +escape(value)+
+    ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+  }
+  function getCookie(c_name){
+  if (document.cookie.length>0)
+    {
+    c_start=document.cookie.indexOf(c_name + "=")
+    if (c_start!=-1)
+      { 
+      c_start=c_start + c_name.length+1 
+      c_end=document.cookie.indexOf(";",c_start)
+      if (c_end==-1) c_end=document.cookie.length
+      return unescape(document.cookie.substring(c_start,c_end))
+      } 
+    }
+  return ""
+  }
+  document.getElementById('LoginWithAmazon').onclick = function() {
+    var key = getCookie('myheader');
+    if(key == undefined || key == "" || key == null){
+      options = { scope : 'profile' };
+      options.response_type = 'code';
+      <!-- use amazon login javascript sdk get authorize code -->
+      amazon.Login.authorize(options, function(response) {
+        console.log(response.code);
+        <!-- call lambda parameter -->
+        var p = {
+          code:response.code
+        };
+        console.log(p);
+        $('h3').empty();
+        <!-- call lambda function -->
+        $.ajax({
+          type:'POST',
+          url:'https://pgcmftuzub.execute-api.us-east-2.amazonaws.com/beta/lam2',
+          data:JSON.stringify(p),
+          contentType:'application/json',
+          dataType:'json',
+          beforeSend:function(request){
+            request.setRequestHeader('myheader', "");
+          },
+          success:function(result, status, request){
+            <!-- set amazon user info into web page -->
+            $("h3").text(result.body);
+            console.log(result);
+            key = result.headers;
+            setCookie('myheader', key, 3600 * 12);
+          }
+        });
+      });
+    }else{
+        var p = {
+          code:""
+        };
+        console.log(p);
+        $('h3').empty();
+        <!-- call lambda function -->
+        $.ajax({
+          type:'POST',
+          url:'https://pgcmftuzub.execute-api.us-east-2.amazonaws.com/beta/lam2',
+          data:JSON.stringify(p),
+          contentType:'application/json',
+          dataType:'json',
+          beforeSend:function(request){
+            request.setRequestHeader('myheader', key);
+          },
+          success:function(result, status, request){
+            <!-- set amazon user info into web page -->
+            $("h3").text(result.body);
+            console.log(result);
+            //var key = result.headers;
+            //setCookie('myheader', key, 3600 * 12);
+          }
+        });
+    }
+    return false; 
+  };
+
+</script>
+<script type "text/javascript">
+  function logout(){
+    amazon.Login.logout();
+    $('h3').empty();
+    alert("logout");
+  }
+</script>
