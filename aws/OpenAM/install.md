@@ -97,4 +97,7 @@ mv AM-5.5.1.war /usr/local/tomcat7/webapps/openam.war
 
 13.access the web application in a browser at http://openam.example.com:8080/openam/ to configure the application
 
+### reference document
+[Quick Start Guide](https://backstage.forgerock.com/docs/am/5.5/quick-start-guide/)
+
 
